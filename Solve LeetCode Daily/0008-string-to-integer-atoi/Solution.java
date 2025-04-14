@@ -1,26 +1,32 @@
-class Solution {
-    public int reverse(int x) {
-        int temp, rem, flag=0;
-        long res=0;
-        temp = x;
-        if(x<0){
-            x=x*-1;
-            flag=1;
+public class Solution {
+    public int myAtoi(String s) {
+        int i = 0, sign = 1, result = 0;
+        int n = s.length();
+
+        // 1. Ignore leading whitespace
+        while (i < n && s.charAt(i) == ' ') {
+            i++;
         }
-        while(x>0){
-            rem = x % 10;
-            res = (res * 10) + rem;
-            x = x / 10;
+
+        // 2. Check the +/- sign (if any)
+        if (i < n && (s.charAt(i) == '+' || s.charAt(i) == '-')) {
+            sign = (s.charAt(i) == '-') ? -1 : 1;
+            i++;
         }
-        if(flag==1){
-            res=res*-1;
+
+        // 3. Read and process numbers
+        while (i < n && Character.isDigit(s.charAt(i))) {
+            int digit = s.charAt(i) - '0';
+
+            // 4. Check for overflow before multiplying/dividing
+            if (result > (Integer.MAX_VALUE - digit) / 10) {
+                return (sign == 1) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+
+            result = result * 10 + digit;
+            i++;
         }
-        if(res < Math.pow(-2,31) || res > (Math.pow(2,31) -1))
-        {
-            return 0;
-        }
-        else{
-            return (int) res;
-        }
+
+        return result * sign;
     }
-  }
+}
