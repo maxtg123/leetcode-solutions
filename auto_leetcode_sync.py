@@ -20,7 +20,9 @@ def run_command(cmd):
 
 def get_submissions():
     print("📥 Đang lấy danh sách submissions từ leetcode-cli...")
-    output = run_command(["leetcode", "submission", "-l", "1000", "--json"])
+    # output = run_command(["leetcode", "submission", "-l", "1000", "--json"])
+    LEETCODE_PATH = r"C:\Users\caoph\AppData\Roaming\npm\leetcode.cmd"
+    output = run_command([LEETCODE_PATH, "submission", "-l", "1000", "--json"])
     try:
         data = json.loads(output)
         print(f"✅ Lấy được {len(data)} bài đã submit.")
@@ -100,9 +102,13 @@ def generate_readme():
                         link = re.search(r"https://leetcode.com/problems/\S+", content)
                         diff = re.search(r"Difficulty:\s*(\w+)", content)
                         date = re.search(r"Solved on:\s*(\d{4}-\d{2}-\d{2})", content)
+                        link_value = link.group(0) if link else 'N/A'
+                        diff_value = diff.group(1) if diff else '-'
+                        date_value = date.group(1) if date else '-'
                         name = dir_name[5:].replace("-", " ").title()
-                        table += f"| {idx} | {name} | {diff.group(1) if diff else '-'} | {lang.capitalize()} | [{link.group(0)}]({link.group(0)}) | {date.group(1) if date else '-'} |\n"
-                        idx += 1
+                        # table += f"| {idx} | {name} | {diff.group(1) if diff else '-'} | {lang.capitalize()} | [{link.group(0)}]({link.group(0)}) | {date.group(1) if date else '-'} |\n"
+                        # idx += 1
+                        table += f"| {idx} | {name} | {diff_value} | {lang.capitalize()} | [{link_value}]({link_value}) | {date_value} |\n"
 
     with open(os.path.join(ROOT_DIR, "README.md"), "w", encoding="utf-8") as f:
         f.write("# 🚀 LeetCode Practice Log\n\n")
