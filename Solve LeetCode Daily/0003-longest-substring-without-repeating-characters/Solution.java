@@ -1,5 +1,6 @@
-// 0001. Two Sum
-// https://leetcode.com/problems/two-sum/
+// Difficulty: Easy
+// Solved on: 2025-04-11
+// https://leetcode.com/problems/longest-substring-without-repeating-characters
 
 
 
