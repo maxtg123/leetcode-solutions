@@ -1,5 +1,8 @@
-// 0002. Two Sum
-// https://leetcode.com/problems/two-sum/
+// Difficulty: Medium
+// Solved on: 2025-04-11
+// https://leetcode.com/problems/add-two-numbers
+
+
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode dummyHead = new ListNode(0); // node ảo
