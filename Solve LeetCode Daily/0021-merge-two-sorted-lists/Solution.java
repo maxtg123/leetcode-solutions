@@ -1,24 +1,33 @@
-class Solution {
-    public boolean isValid(String s) {
-        
-        Stack<Character> stack = new Stack<>();
-        
-        for (char ch : s.toCharArray()) {
-            if (ch == '(' || ch == '{' || ch == '[') {
-                stack.push(ch); // Mở ngoặc
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+ class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(-1); // node giả để dễ thao tác
+        ListNode current = dummy;
+
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                current.next = list1;
+                list1 = list1.next;
             } else {
-                if (stack.isEmpty()) return false;
-
-                char open = stack.pop();
-
-                if ((ch == ')' && open != '(') ||
-                    (ch == '}' && open != '{') ||
-                    (ch == ']' && open != '[')) {
-                    return false;
-                }
+                current.next = list2;
+                list2 = list2.next;
             }
+            current = current.next;
         }
 
-        return stack.isEmpty(); // Không còn ngoặc thừa
+        // Nối phần còn lại
+        current.next = (list1 != null) ? list1 : list2;
+
+        return dummy.next; // Trả về node đầu tiên thật sự
     }
 }
