@@ -9,26 +9,26 @@
  * }
  */
 class Solution {
-    public ListNode swapPairs(ListNode head) {
-        ListNode dummy = new ListNode(0);
-        dummy.next = head;
-
-        ListNode current = dummy;
-
-        while (current.next != null && current.next.next != null) {
-            ListNode first = current.next;
-            ListNode second = current.next.next;
-
-            // Dùng biến temp để swap
-            ListNode temp = second.next;
-
-            current.next = second;
-            second.next = first;
-            first.next = temp;
-
-            current = first; // Di chuyển tới cặp tiếp theo
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // Kiểm tra nếu còn ít hơn k node
+        ListNode node = head;
+        for (int i = 0; i < k; i++) {
+            if (node == null) return head;
+            node = node.next;
         }
 
-        return dummy.next;
+        // Đảo ngược k node đầu tiên
+        ListNode prev = null, curr = head, next = null;
+        for (int i = 0; i < k; i++) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        // Đệ quy xử lý phần còn lại
+        head.next = reverseKGroup(curr, k);
+
+        return prev; // prev là node đầu tiên sau khi đảo ngược
     }
 }
