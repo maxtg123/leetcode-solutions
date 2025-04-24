@@ -1,19 +1,28 @@
 class Solution {
-    public int removeElement(int[] nums, int val) {
-        int i = 0;
-        int n = nums.length;
-
-        while (i < n) {
-            if (nums[i] == val) {
-                // Gán phần tử cuối vào vị trí hiện tại và giảm n
-                nums[i] = nums[n - 1];
-                n--;
-            } else {
-                i++;
-            }
+    public int divide(int dividend, int divisor) {
+        // Xử lý tràn số nguyên
+        if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE;
         }
 
-        // Độ dài mới là n
-        return n;
+        // Lưu dấu kết quả
+        boolean negative = (dividend < 0) ^ (divisor < 0);
+
+        long dvd = Math.abs((long) dividend);
+        long dvs = Math.abs((long) divisor);
+        int result = 0;
+
+        while (dvd >= dvs) {
+            long temp = dvs;
+            int multiple = 1;
+            while (dvd >= (temp << 1)) {
+                temp <<= 1;
+                multiple <<= 1;
+            }
+            dvd -= temp;
+            result += multiple;
+        }
+
+        return negative ? -result : result;
     }
 }
