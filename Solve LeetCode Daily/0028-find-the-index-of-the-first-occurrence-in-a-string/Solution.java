@@ -1,19 +1,16 @@
 class Solution {
-    public int removeElement(int[] nums, int val) {
-        int i = 0;
-        int n = nums.length;
+    public int strStr(String haystack, String needle) {
+        int n = haystack.length();
+        int m = needle.length();
 
-        while (i < n) {
-            if (nums[i] == val) {
-                // Gán phần tử cuối vào vị trí hiện tại và giảm n
-                nums[i] = nums[n - 1];
-                n--;
-            } else {
-                i++;
+        if (m == 0) return 0;
+
+        for (int i = 0; i <= n - m; i++) {
+            if (haystack.substring(i, i + m).equals(needle)) {
+                return i;
             }
         }
 
-        // Độ dài mới là n
-        return n;
+        return -1;
     }
 }
