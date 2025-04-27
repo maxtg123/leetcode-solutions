@@ -1,33 +1,37 @@
-public class Solution {
-    public int search(int[] nums, int target) {
-        int left = 0, right = nums.length - 1;
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int first = findFirst(nums, target);
+        int last = findLast(nums, target);
+        return new int[] {first, last};
+    }
 
+    private int findFirst(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        int ans = -1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
-
-            // Case 1: Found the target
-            if (nums[mid] == target) {
-                return mid;
+            if (nums[mid] >= target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
             }
-
-            // Case 2: Left half is sorted
-            if (nums[left] <= nums[mid]) {
-                if (nums[left] <= target && target < nums[mid]) {
-                    right = mid - 1; // Search left
-                } else {
-                    left = mid + 1;  // Search right
-                }
-            } 
-            // Case 3: Right half is sorted
-            else {
-                if (nums[mid] < target && target <= nums[right]) {
-                    left = mid + 1; // Search right
-                } else {
-                    right = mid - 1; // Search left
-                }
-            }
+            if (nums[mid] == target) ans = mid;
         }
+        return ans;
+    }
 
-        return -1; // Not found
+    private int findLast(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        int ans = -1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] <= target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+            if (nums[mid] == target) ans = mid;
+        }
+        return ans;
     }
 }

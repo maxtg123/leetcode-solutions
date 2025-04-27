@@ -1,33 +1,20 @@
-public class Solution {
-    public int search(int[] nums, int target) {
-        int left = 0, right = nums.length - 1;
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        Set<String> seen = new HashSet<>();
 
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-
-            // Case 1: Found the target
-            if (nums[mid] == target) {
-                return mid;
-            }
-
-            // Case 2: Left half is sorted
-            if (nums[left] <= nums[mid]) {
-                if (nums[left] <= target && target < nums[mid]) {
-                    right = mid - 1; // Search left
-                } else {
-                    left = mid + 1;  // Search right
-                }
-            } 
-            // Case 3: Right half is sorted
-            else {
-                if (nums[mid] < target && target <= nums[right]) {
-                    left = mid + 1; // Search right
-                } else {
-                    right = mid - 1; // Search left
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                char val = board[i][j];
+                if (val != '.') {
+                    if (!seen.add(val + " in row " + i) ||
+                        !seen.add(val + " in col " + j) ||
+                        !seen.add(val + " in box " + (i / 3) + "-" + (j / 3))) {
+                        return false;
+                    }
                 }
             }
         }
 
-        return -1; // Not found
+        return true;
     }
 }
