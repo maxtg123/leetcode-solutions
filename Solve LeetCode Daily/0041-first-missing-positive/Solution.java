@@ -1,20 +1,27 @@
 class Solution {
-    public String countAndSay(int n) {
-        String res = "1";
-        for (int i = 1; i < n; i++) {
-            StringBuilder temp = new StringBuilder();
-            int count = 1;
-            for (int j = 1; j < res.length(); j++) {
-                if (res.charAt(j) == res.charAt(j - 1)) {
-                    count++;
-                } else {
-                    temp.append(count).append(res.charAt(j - 1));
-                    count = 1;
-                }
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+
+        // Put each number in the correct position if possible
+        for (int i = 0; i < n; i++) {
+            while (
+                nums[i] > 0 && nums[i] <= n &&
+                nums[nums[i] - 1] != nums[i]
+            ) {
+                int temp = nums[i];
+                nums[i] = nums[temp - 1];
+                nums[temp - 1] = temp;
             }
-            temp.append(count).append(res.charAt(res.length() - 1));
-            res = temp.toString();
         }
-        return res;
+
+        // Put each number in the correct position if possible
+        for (int i = 0; i < n; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
+            }
+        }
+
+        // Put each number in the correct position if possible
+        return n + 1;
     }
 }
