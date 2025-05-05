@@ -1,20 +1,27 @@
 class Solution {
-    public String countAndSay(int n) {
-        String res = "1";
-        for (int i = 1; i < n; i++) {
-            StringBuilder temp = new StringBuilder();
-            int count = 1;
-            for (int j = 1; j < res.length(); j++) {
-                if (res.charAt(j) == res.charAt(j - 1)) {
-                    count++;
+    public int trap(int[] height) {
+        int left = 0, right = height.length - 1;
+        int leftMax = 0, rightMax = 0;
+        int water = 0;
+
+        while (left < right) {
+            if (height[left] < height[right]) {
+                if (height[left] >= leftMax) {
+                    leftMax = height[left];
                 } else {
-                    temp.append(count).append(res.charAt(j - 1));
-                    count = 1;
+                    water += leftMax - height[left];
                 }
+                left++;
+            } else {
+                if (height[right] >= rightMax) {
+                    rightMax = height[right];
+                } else {
+                    water += rightMax - height[right];
+                }
+                right--;
             }
-            temp.append(count).append(res.charAt(res.length() - 1));
-            res = temp.toString();
         }
-        return res;
+
+        return water;
     }
 }

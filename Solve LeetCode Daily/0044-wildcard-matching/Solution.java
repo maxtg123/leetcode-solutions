@@ -1,26 +1,30 @@
 class Solution {
-    public String multiply(String num1, String num2) {
-        if (num1.equals("0") || num2.equals("0")) return "0";
+    public boolean isMatch(String s, String p) {
+        int m = s.length(), n = p.length();
+        boolean[][] dp = new boolean[m + 1][n + 1];
         
-        int[] result = new int[num1.length() + num2.length()];
+        dp[0][0] = true;  // Cả s và p đều rỗng
         
-        for (int i = num1.length() - 1; i >= 0; i--) {
-            for (int j = num2.length() - 1; j >= 0; j--) {
-                int mul = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
-                int sum = mul + result[i + j + 1];
+        // Xử lý p có thể bắt đầu bằng * (nhiều dấu *)
+        for (int j = 1; j <= n; j++) {
+            if (p.charAt(j - 1) == '*') {
+                dp[0][j] = dp[0][j - 1];
+            }
+        }
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                char sc = s.charAt(i - 1);
+                char pc = p.charAt(j - 1);
                 
-                result[i + j + 1] = sum % 10;
-                result[i + j] += sum / 10;
+                if (pc == '?' || pc == sc) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (pc == '*') {
+                    dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
+                }
             }
         }
         
-        StringBuilder sb = new StringBuilder();
-        for (int r : result) {
-            if (!(sb.length() == 0 && r == 0)) {
-                sb.append(r);
-            }
-        }
-        
-        return sb.toString();
+        return dp[m][n];
     }
 }

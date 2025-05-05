@@ -1,20 +1,34 @@
 class Solution {
-    public String countAndSay(int n) {
-        String res = "1";
-        for (int i = 1; i < n; i++) {
-            StringBuilder temp = new StringBuilder();
-            int count = 1;
-            for (int j = 1; j < res.length(); j++) {
-                if (res.charAt(j) == res.charAt(j - 1)) {
-                    count++;
-                } else {
-                    temp.append(count).append(res.charAt(j - 1));
-                    count = 1;
-                }
-            }
-            temp.append(count).append(res.charAt(res.length() - 1));
-            res = temp.toString();
-        }
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> res = new ArrayList<>();
+
+        dfs(candidates, target, 0, new ArrayList<Integer>(), res);
         return res;
+    }
+
+    private void dfs(int[] candidates, int target, int start, List<Integer> comb, List<List<Integer>> res) {
+        if (target < 0) {
+            return;
+        }
+
+        if (target == 0) {
+            res.add(new ArrayList<Integer>(comb));
+            return;
+        }
+
+        for (int i = start; i < candidates.length; i++) {
+            if (i > start && candidates[i] == candidates[i-1]) {
+                continue;
+            }
+
+            if (candidates[i] > target) {
+                break;
+            }
+
+            comb.add(candidates[i]);
+            dfs(candidates, target - candidates[i], i + 1, comb, res);
+            comb.remove(comb.size() - 1);
+        }
     }
 }

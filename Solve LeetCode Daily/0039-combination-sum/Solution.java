@@ -1,20 +1,25 @@
 class Solution {
-    public String countAndSay(int n) {
-        String res = "1";
-        for (int i = 1; i < n; i++) {
-            StringBuilder temp = new StringBuilder();
-            int count = 1;
-            for (int j = 1; j < res.length(); j++) {
-                if (res.charAt(j) == res.charAt(j - 1)) {
-                    count++;
-                } else {
-                    temp.append(count).append(res.charAt(j - 1));
-                    count = 1;
-                }
-            }
-            temp.append(count).append(res.charAt(res.length() - 1));
-            res = temp.toString();
-        }
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+         // Result list to store all valid combinations
+        List<List<Integer>> res = new ArrayList<>(); 
+        backtrack(candidates, target, new ArrayList<>(), res, 0, 0);
         return res;
+    }
+
+    private void backtrack(int[] candidates, int target, List<Integer> current,                 List<List<Integer>> res, int sum, int start) {
+        if (sum > target) {
+            return; // Sum next target on the return
+        }
+        
+        if (sum == target) {
+            res.add(new ArrayList<>(current)); // True target auto save
+            return;
+        }
+
+        for (int i = start; i < candidates.length; i++) {
+            current.add(candidates[i]); // select element
+            backtrack(candidates, target, current, res, sum + candidates[i], i); // Call back (i), because it is reselected
+            current.remove(current.size() - 1); // Backtrack, remove selected element
+        }
     }
 }
