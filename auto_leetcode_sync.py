@@ -95,20 +95,50 @@ def extract_metadata(entry):
         "date": date_str
     }
 
-def update_readme(problem_slug, lang, metadata):
-    """Cập nhật thông tin bài giải vào README.md."""
-    table_row = f"| {metadata['frontend_question_id']} | {problem_slug.replace('-', ' ').title()} | {metadata['difficulty']} | {lang.capitalize()} | [https://leetcode.com/problems/{problem_slug}/](https://leetcode.com/problems/{problem_slug}/) | {metadata['date']} |\n"
-    
+def update_readme(problem_slug, lang, metadata, problem_title):
+    """Cập nhật thông tin bài giải vào README.md, kiểm tra trùng lặp theo ID + ngôn ngữ, và sắp xếp lại bảng."""
+    table_row = f"| {metadata['frontend_question_id']} | {problem_title} | {metadata['difficulty']} | {lang.capitalize()} | [https://leetcode.com/problems/{problem_slug}/](https://leetcode.com/problems/{problem_slug}/) | {metadata['date']} |\n"
     readme_path = os.path.join(ROOT_DIR, "README.md")
     
+    # Đọc toàn bộ nội dung README
     if os.path.exists(readme_path):
         with open(readme_path, "r", encoding="utf-8") as f:
-            content = f.read()
-        
-        if table_row not in content:
-            with open(readme_path, "a", encoding="utf-8") as f:
-                f.write(table_row)
+            lines = f.readlines()
+        # Tìm vị trí bắt đầu bảng
+        table_start = None
+        for i, line in enumerate(lines):
+            if line.strip().startswith("| # "):
+                table_start = i
+                break
+        if table_start is not None:
+            header = lines[:table_start+2]  # gồm cả dòng header và dòng ---
+            table = lines[table_start+2:]
+            # Kiểm tra trùng lặp theo ID + ngôn ngữ
+            found = False
+            for row in table:
+                parts = row.strip().split("|")
+                if len(parts) > 4:
+                    id_ = parts[1].strip()
+                    lang_ = parts[4].strip().lower()
+                    if id_ == str(metadata['frontend_question_id']) and lang_ == lang.capitalize():
+                        found = True
+                        break
+            if not found:
+                table.append(table_row)
+                # Sắp xếp lại bảng theo ID tăng dần
+                def row_key(row):
+                    try:
+                        return int(row.strip().split("|")[1].strip())
+                    except:
+                        return 99999
+                table = sorted([r for r in table if r.strip()], key=row_key)
+                with open(readme_path, "w", encoding="utf-8") as f:
+                    f.writelines(header)
+                    for row in table:
+                        f.write(row if row.endswith("\n") else row+"\n")
                 print(f"✅ Đã cập nhật thông tin vào README.md cho bài {problem_slug}")
+        else:
+            print("❌ Không tìm thấy bảng trong README.md!")
     else:
         print("❌ README.md chưa tồn tại!")
 
@@ -138,9 +168,10 @@ if __name__ == "__main__":
             continue
         seen.add(slug)
         meta = extract_metadata(entry)
+        problem_title = entry.get("title", slug.replace('-', ' ').title())
 
         for lang in LANGUAGES:
             code = fetch_code(slug, lang)
             if code:
                 save_solution_file(slug, code, lang, meta)
-                update_readme(slug, lang, meta)  # Cập nhật thông tin vào README.md
+                update_readme(slug, lang, meta, problem_title)  # Cập nhật thông tin vào README.md
