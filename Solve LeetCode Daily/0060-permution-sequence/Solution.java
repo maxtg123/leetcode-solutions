@@ -1,29 +1,45 @@
-
-
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
 class Solution {
-    public String getPermutation(int n, int k) {
-        List<Integer> numbers = new ArrayList<>();
-        int fact = 1;
-        
-        // Create list of numbers and calculate factorial
-        for (int i = 1; i <= n; i++) {
-            numbers.add(i);
-            fact *= i;
+    public ListNode rotateRight(ListNode head, int k) {
+        // Handle edge cases
+        if (head == null || head.next == null || k == 0) {
+            return head;
         }
         
-        // Convert k to 0-based index
-        k--;
-        
-        StringBuilder result = new StringBuilder();
-        
-        // Generate permutation
-        for (int i = n; i > 0; i--) {
-            fact /= i;
-            int index = k / fact;
-            result.append(numbers.remove(index));
-            k %= fact;
+        // Count the length of the list
+        int length = 1;
+        ListNode tail = head;
+        while (tail.next != null) {
+            tail = tail.next;
+            length++;
         }
         
-        return result.toString();
+        // Calculate actual rotation needed
+        k = k % length;
+        if (k == 0) {
+            return head;
+        }
+        
+        // Find the new tail (length - k - 1 steps from head)
+        ListNode newTail = head;
+        for (int i = 0; i < length - k - 1; i++) {
+            newTail = newTail.next;
+        }
+        
+        // Perform rotation
+        ListNode newHead = newTail.next;
+        newTail.next = null;
+        tail.next = head;
+        
+        return newHead;
     }
 }
